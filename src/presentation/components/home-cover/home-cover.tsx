@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Button } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
+import { Text } from 'react-native';
 
 import styled from 'styled-components/native';
 
@@ -13,34 +13,37 @@ const Container = styled.View`
 `;
 
 const Title = styled.Text`
-  font-family: ${font['regular']};
+  font-family: ${font.regular};
   color: ${blue['500']};
   text-transform: uppercase;
   font-size: 18px;
 `;
 
 const Description = styled.Text`
-  font-family: ${font['semibold']};
+  font-family: ${font.semibold};
   color: ${blue['500']};
   text-transform: uppercase;
   font-size: 26px;
 `;
 
-interface Props {
-  text: string;
-  imageUrl: string;
-}
-
-export default function HomeCover(props: Props) {
+function HomeCover({ imageUrl, text }: HomeCoverProps): JSX.Element {
   return (
     <Container>
-      <Title>
-        Bem vindo a nossa
-      </Title>
-      <Description>
-        plataforma
-      </Description>
+      <Title>Bem vindo a nossa</Title>
+      <Description>plataforma</Description>
+      {text ? <Text>{text}</Text> : null}
+      {imageUrl ? <Text>{imageUrl}</Text> : null}
     </Container>
-  ) ;
+  );
+}
+interface HomeCoverProps {
+  text?: string;
+  imageUrl?: string;
 }
 
+HomeCover.defaultProps = {
+  text: 'No text',
+  imageUrl: 'ds',
+};
+
+export default HomeCover;
