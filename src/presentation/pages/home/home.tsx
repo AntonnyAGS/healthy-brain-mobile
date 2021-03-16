@@ -4,9 +4,9 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { HomeCover } from '../../components/HomeCover'
+import { HomeCover } from '../../components'
 
-export function Home(){
+export default function Home(){
   const navigation = useNavigation();
 
   return (

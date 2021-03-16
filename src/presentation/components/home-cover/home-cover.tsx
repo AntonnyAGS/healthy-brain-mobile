@@ -13,7 +13,7 @@ const Container = styled.View`
 `;
 
 const Title = styled.Text`
-  font-family: ${font['thin']};
+  font-family: ${font['regular']};
   color: ${blue['500']};
   text-transform: uppercase;
   font-size: 18px;
@@ -31,7 +31,7 @@ interface Props {
   imageUrl: string;
 }
 
-export function HomeCover(props: Props) {
+export default function HomeCover(props: Props) {
   return (
     <Container>
       <Title>

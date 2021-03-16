@@ -3,10 +3,11 @@
     "name": "healthy-brain-mobile",
     "slug": "healthy-brain-mobile",
     "version": "1.0.0",
+    "entryPoint": "./src/main/App.tsx",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./public/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./public/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,12 +22,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./public/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./public/favicon.png"
     }
   }
 }

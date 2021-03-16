@@ -5,12 +5,11 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { registerRootComponent } from 'expo';
 
 import { loadAsync } from 'expo-font';
 
-import { Login } from './src/pages/Login';
-import { Home } from './src/pages/Home';
-
+import { Login, Home } from './factories/pages'
 import AppLoading from 'expo-app-loading';
 
 const Stack = createStackNavigator();
@@ -18,25 +17,23 @@ const Stack = createStackNavigator();
 function loadAssets() {
   try {
     return loadAsync({
-      'Montserrat': require('./assets/fonts/Montserrat.ttf'),
-      'Montserrat-Medium': require('./assets/fonts/Montserrat-Medium.ttf'),
-      'Montserrat-SemiBold': require('./assets/fonts/Montserrat-SemiBold.ttf'),
-      'Montserrat-Bold': require('./assets/fonts/Montserrat-Bold.ttf'),
-      'Montserrat-Black': require('./assets/fonts/Montserrat-Black.ttf'),
-      'Montserrat-Thin': require('./assets/fonts/Montserrat-Thin.ttf')
+      'Montserrat': require('../../public/fonts/Montserrat.ttf'),
+      'Montserrat-Medium': require('../../public/fonts/Montserrat-Medium.ttf'),
+      'Montserrat-SemiBold': require('../../public/fonts/Montserrat-SemiBold.ttf'),
+      'Montserrat-Bold': require('../../public/fonts/Montserrat-Bold.ttf'),
+      'Montserrat-Black': require('../../public/fonts/Montserrat-Black.ttf'),
+      'Montserrat-Thin': require('../../public/fonts/Montserrat-Thin.ttf')
     });
   } catch (error) {
     return Promise.reject();
   }
 } 
-const screen = Dimensions.get('screen')
-const window = Dimensions.get('window')
+const screen = Dimensions.get('screen');
+const window = Dimensions.get('window');
 
-export default function App() {
+function App() {
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
-
-  console.log(screen, window)
 
   if (!fontsLoaded) {
     return (
@@ -46,6 +43,10 @@ export default function App() {
         onError={ () => {} }
       />
     );
+  }
+
+  const obj = {
+    teste: 'oi'
   }
 
   return (
@@ -59,6 +60,8 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+export default registerRootComponent(App);
 
 const styles = StyleSheet.create({
   container: {

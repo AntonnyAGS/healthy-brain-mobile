@@ -1,0 +1,1 @@
+export { default as HomeCover } from './home-cover/home-cover'
