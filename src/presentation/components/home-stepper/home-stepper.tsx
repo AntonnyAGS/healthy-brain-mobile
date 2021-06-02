@@ -5,12 +5,10 @@ import {
   View,
   StyleSheet,
   useWindowDimensions,
-  Dimensions,
 } from 'react-native';
 
 import { ExpandingDot } from 'react-native-animated-pagination-dots';
 import styled from 'styled-components/native';
-import { blue } from '../../theme/colors';
 
 import HomeCover from '../home-cover/home-cover';
 
@@ -25,7 +23,6 @@ type HomeStepperItem = {
 };
 
 const Container = styled.View`
-  background: ${blue['300']};
   flex: 1;
 `;
 
@@ -50,8 +47,6 @@ const styles = StyleSheet.create({
 });
 
 export default function HomeStepper(): JSX.Element {
-  const { height } = Dimensions.get('window');
-
   const keySvgMap: Record<string, JSX.Element> = {
     '1': <GirlSittingOnBookSvg />,
     '2': <GirlSittingOnChairSvg />,
@@ -114,13 +109,8 @@ export default function HomeStepper(): JSX.Element {
         decelerationRate="normal"
         scrollEventThrottle={16}
       />
-      <View
-        style={{
-          height: 70,
-          position: 'absolute',
-          top: height - (90 + 32),
-        }}
-      >
+      <View>
+        {/* <Text>Oi</Text> */}
         <ExpandingDot
           data={sliderData}
           expandingDotWidth={30}
@@ -135,8 +125,6 @@ export default function HomeStepper(): JSX.Element {
             marginHorizontal: 3,
           }}
           containerStyle={{
-            top: 30,
-            bottom: 30,
             justifyContent: 'flex-start',
             alignContent: 'flex-start',
             width: '100%',
