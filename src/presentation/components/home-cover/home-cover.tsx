@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from 'react-native';
 import styled from 'styled-components/native';
 
 import { blue } from '../../theme/colors';
@@ -40,25 +41,52 @@ const SvgContainer = styled.View`
   margin-bottom: 32px;
 `;
 
-function HomeCover({ children, text }: HomeCoverProps): JSX.Element {
+const Button = styled.Pressable`
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 20px;
+  border-radius: 15px;
+`;
+
+function HomeCover({
+  children,
+  text,
+  showNextButton,
+  onPressButton,
+}: HomeCoverProps): JSX.Element {
   return (
     <Container>
       <SvgContainer>{children}</SvgContainer>
       <Title>Bem vindo a nossa</Title>
       <FeaturedTitle>plataforma</FeaturedTitle>
       {text ? <Description>{text}</Description> : null}
+      {showNextButton && (
+        <Button
+          style={({ pressed }) => [
+            { backgroundColor: pressed ? blue['500'] : blue['400'] },
+          ]}
+          onPress={onPressButton}
+        >
+          <Text style={{ fontSize: 18, color: 'white' }}>Continuar</Text>
+        </Button>
+      )}
     </Container>
   );
 }
 
 interface HomeCoverProps {
   text?: string;
+  showNextButton: boolean;
+  onPressButton?: () => void;
   children?: JSX.Element;
 }
 
 HomeCover.defaultProps = {
   text: 'No text',
   children: null,
+  onPressButton: () => ({}),
 };
 
 export default HomeCover;

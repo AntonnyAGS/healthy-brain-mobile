@@ -7,3 +7,7 @@ export const blue: Readonly<Record<string, string>> = {
   '75': '#EBF6FF',
   '50': '#EDF1FA',
 };
+
+export const grey: Readonly<Record<string, string>> = {
+  '200': '#EEEFF4',
+};

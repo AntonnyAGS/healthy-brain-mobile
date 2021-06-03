@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   Animated,
@@ -47,6 +48,8 @@ const styles = StyleSheet.create({
 });
 
 export default function HomeStepper(): JSX.Element {
+  const navigation = useNavigation();
+
   const keySvgMap: Record<string, JSX.Element> = {
     '1': <GirlSittingOnBookSvg />,
     '2': <GirlSittingOnChairSvg />,
@@ -77,6 +80,10 @@ export default function HomeStepper(): JSX.Element {
     },
   ];
 
+  const handleToLogin = () => {
+    navigation.navigate('Login');
+  };
+
   const { width } = useWindowDimensions();
 
   const scrollX = React.useRef(new Animated.Value(0)).current;
@@ -86,7 +93,13 @@ export default function HomeStepper(): JSX.Element {
   const renderItem = ({ item }: { item: HomeStepperItem }) => {
     return (
       <View style={[styles.itemContainer, { width }]}>
-        <HomeCover text={item.description}>{keySvgMap[item.key]}</HomeCover>
+        <HomeCover
+          text={item.description}
+          showNextButton={item.key === '4'}
+          onPressButton={handleToLogin}
+        >
+          {keySvgMap[item.key]}
+        </HomeCover>
       </View>
     );
   };
