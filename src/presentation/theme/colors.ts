@@ -2,6 +2,7 @@
 export const blue: Readonly<Record<string, string>> = {
   '500': '#002C76',
   '400': '#4B7FFB',
+  '350': '#60ADD9',
   '300': '#67C8FF',
   '100': '#D2DFFF',
   '75': '#EBF6FF',

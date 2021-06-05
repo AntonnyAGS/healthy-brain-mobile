@@ -80,8 +80,8 @@ export default function HomeStepper(): JSX.Element {
     },
   ];
 
-  const handleToLogin = () => {
-    navigation.navigate('Login');
+  const handleToSelector = () => {
+    navigation.navigate('HomeSelector');
   };
 
   const { width } = useWindowDimensions();
@@ -96,7 +96,7 @@ export default function HomeStepper(): JSX.Element {
         <HomeCover
           text={item.description}
           showNextButton={item.key === '4'}
-          onPressButton={handleToLogin}
+          onPressButton={handleToSelector}
         >
           {keySvgMap[item.key]}
         </HomeCover>
@@ -123,7 +123,6 @@ export default function HomeStepper(): JSX.Element {
         scrollEventThrottle={16}
       />
       <View>
-        {/* <Text>Oi</Text> */}
         <ExpandingDot
           data={sliderData}
           expandingDotWidth={30}

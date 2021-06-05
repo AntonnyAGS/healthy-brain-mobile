@@ -1,9 +1,11 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 
+import Icon from 'react-native-vector-icons/Feather';
 import { blue } from '../../theme/colors';
 import { font } from '../../theme/text';
+import Button from '../button/button';
 
 const Container = styled.View`
   background: ${blue['300']};
@@ -41,13 +43,8 @@ const SvgContainer = styled.View`
   margin-bottom: 32px;
 `;
 
-const Button = styled.Pressable`
-  height: 56px;
-  align-items: center;
-  justify-content: center;
-
-  margin-top: 20px;
-  border-radius: 15px;
+const Spacer = styled.View`
+  flex: 1;
 `;
 
 function HomeCover({
@@ -64,12 +61,21 @@ function HomeCover({
       {text ? <Description>{text}</Description> : null}
       {showNextButton && (
         <Button
-          style={({ pressed }) => [
-            { backgroundColor: pressed ? blue['500'] : blue['400'] },
-          ]}
+          color={blue['400']}
+          pressedColor={blue['500']}
           onPress={onPressButton}
+          style={{ marginTop: 16 }}
         >
-          <Text style={{ fontSize: 18, color: 'white' }}>Continuar</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Spacer />
+            <Text
+              style={{ fontSize: 18, color: 'white', fontFamily: font.medium }}
+            >
+              Continuar
+            </Text>
+            <Spacer />
+            <Icon name="arrow-right" size={20} color="white" />
+          </View>
         </Button>
       )}
     </Container>
@@ -79,14 +85,13 @@ function HomeCover({
 interface HomeCoverProps {
   text?: string;
   showNextButton: boolean;
-  onPressButton?: () => void;
+  onPressButton: () => void;
   children?: JSX.Element;
 }
 
 HomeCover.defaultProps = {
   text: 'No text',
   children: null,
-  onPressButton: () => ({}),
 };
 
 export default HomeCover;

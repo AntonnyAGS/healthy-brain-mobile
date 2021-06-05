@@ -3,13 +3,12 @@ import React, { useState } from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { registerRootComponent } from 'expo';
-import { Text } from 'react-native';
 import { loadAsync } from 'expo-font';
 
 import AppLoading from 'expo-app-loading';
-import { Login, Home } from './factories/pages';
+import { Login, Home, HomeSelector } from './factories/pages';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +47,11 @@ function App() {
           <Stack.Screen
             name="Home"
             component={Home}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="HomeSelector"
+            component={HomeSelector}
             options={{ headerShown: false }}
           />
           <Stack.Screen
