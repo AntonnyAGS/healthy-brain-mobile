@@ -51,10 +51,9 @@ function BottomDialog({
   );
 }
 
-interface BottomDialogProps {
+interface BottomDialogProps extends ModalProps {
   children: JSX.Element;
   onRequestClose: () => void;
-  props: ModalProps;
 }
 
 export default BottomDialog;

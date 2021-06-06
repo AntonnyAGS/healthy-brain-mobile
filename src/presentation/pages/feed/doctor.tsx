@@ -1,10 +1,12 @@
 import { useNavigation, useRoute } from '@react-navigation/core';
-import React from 'react';
+import React, { useState } from 'react';
 import { ImageBackground, SafeAreaView, View } from 'react-native';
+import { Text } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/Feather';
 
 import styled from 'styled-components/native';
 import { Button, Spacer } from '../../components';
+import BottomDialog from '../../components/bottom-dialog/bottom-dialog';
 import { blue, grey } from '../../theme/colors';
 import { font } from '../../theme/text';
 import { Doctor } from '../../usecases/doctor';
@@ -57,11 +59,18 @@ const Header = styled.View`
   align-items: center;
 `;
 
+const ConsultTitle = styled.Text`
+  font-size: 18px;
+  font-family: ${font.medium};
+`;
+
 export default function DoctorScreen(): JSX.Element {
   const navigation = useNavigation();
   const { params } = useRoute();
 
   const { doctor } = params as DoctorProps;
+
+  const [showDialog, setShowDialog] = useState(false);
 
   const handleBack = () => {
     navigation.goBack();
@@ -93,7 +102,7 @@ export default function DoctorScreen(): JSX.Element {
           <About>Sobre o doutor</About>
           <AboutText>{doctor.description}</AboutText>
 
-          <Button onPress={() => null} style={{ marginTop: 32 }}>
+          <Button onPress={() => setShowDialog(true)} style={{ marginTop: 32 }}>
             <ButtonTitle>Solicitar consulta</ButtonTitle>
           </Button>
           <Spacer />
@@ -107,6 +116,14 @@ export default function DoctorScreen(): JSX.Element {
         </Button>
         <Spacer />
       </Container> */}
+        <BottomDialog
+          transparent
+          visible={showDialog}
+          animationType="fade"
+          onRequestClose={() => setShowDialog(false)}
+        >
+          <ConsultTitle>Marcar consulta</ConsultTitle>
+        </BottomDialog>
       </SafeAreaView>
     </>
   );
