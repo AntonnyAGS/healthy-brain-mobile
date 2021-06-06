@@ -42,6 +42,7 @@
     "react/prop-types": 0,
     "react/jsx-props-no-spreading":"off",
     "no-shadow": "off",
+    "react-hooks/rules-of-hooks": "off",
     "@typescript-eslint/no-shadow": ["error"]
   }
 }

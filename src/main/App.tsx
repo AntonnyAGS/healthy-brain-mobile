@@ -1,6 +1,5 @@
 /* eslint-disable global-require */
 import React, { useState } from 'react';
-import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -8,7 +7,13 @@ import { registerRootComponent } from 'expo';
 import { loadAsync } from 'expo-font';
 
 import AppLoading from 'expo-app-loading';
-import { Login, Home, HomeSelector, CreateAccount } from './factories/pages';
+import {
+  Login,
+  Home,
+  HomeSelector,
+  CreateAccount,
+  Main,
+} from './factories/pages';
 
 const Stack = createStackNavigator();
 
@@ -62,6 +67,11 @@ function App() {
           <Stack.Screen
             name="CreateAccount"
             component={CreateAccount}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Main"
+            component={Main}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
