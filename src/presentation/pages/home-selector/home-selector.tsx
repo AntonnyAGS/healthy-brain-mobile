@@ -64,6 +64,10 @@ export default function HomeSelector(): JSX.Element {
     navigation.navigate('Login');
   };
 
+  const handleNavigateToCreateAccount = () => {
+    navigation.navigate('CreateAccount');
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: blue['300'] }}>
       <ImageBackground
@@ -88,7 +92,10 @@ export default function HomeSelector(): JSX.Element {
             >
               <ButtonText>Login</ButtonText>
             </Button>
-            <Button style={{ marginTop: 16 }}>
+            <Button
+              style={{ marginTop: 16 }}
+              onPress={handleNavigateToCreateAccount}
+            >
               <ButtonText>Criar uma conta</ButtonText>
             </Button>
           </Card>

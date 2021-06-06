@@ -1,11 +1,21 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Feather';
-import { useNavigation } from '@react-navigation/core';
-import { CustomTextInput, Button, Spacer } from '../../components';
+import { useNavigation } from '@react-navigation/native';
+
+import { Button, CustomTextInput, Spacer } from '../../components';
+
 import { grey } from '../../theme/colors';
 import { font } from '../../theme/text';
+
+const Container = styled.View`
+  padding: 16px;
+
+  justify-content: center;
+  flex: 1;
+`;
 
 const Title = styled.Text`
   font-size: 26px;
@@ -19,14 +29,12 @@ const ButtonTitle = styled.Text`
   color: white;
 `;
 
-const Container = styled.View`
-  padding: 16px;
-
-  justify-content: center;
-  flex: 1;
+const TermsText = styled.Text`
+  font-family: ${font.medium};
+  font-size: 16px;
 `;
 
-export default function Login(): JSX.Element {
+function CreateAccount(): JSX.Element {
   const navigation = useNavigation();
 
   const handleBack = () => {
@@ -34,7 +42,7 @@ export default function Login(): JSX.Element {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Container>
         <Icon
           name="arrow-left"
@@ -43,7 +51,13 @@ export default function Login(): JSX.Element {
           onPress={handleBack}
         />
         <Spacer />
-        <Title>Login</Title>
+        <Title>Cadastro</Title>
+        <CustomTextInput
+          icon="user"
+          placeholder="Nome completo"
+          placeHolderTextColor="black"
+          containerStyle={{ backgroundColor: grey['300'], marginTop: 16 }}
+        />
         <CustomTextInput
           icon="mail"
           placeholder="Email"
@@ -64,10 +78,16 @@ export default function Login(): JSX.Element {
           }}
         />
         <Button onPress={() => null}>
-          <ButtonTitle>Entrar</ButtonTitle>
+          <ButtonTitle>Cadastrar</ButtonTitle>
         </Button>
         <Spacer />
+        <TermsText>
+          Ao criar uma conta ou fazer login você concorda nossos Termos de uso e
+          nossa Política de privacidade.
+        </TermsText>
       </Container>
     </SafeAreaView>
   );
 }
+
+export default CreateAccount;

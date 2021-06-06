@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { blue } from '../../theme/colors';
 import { font } from '../../theme/text';
 import Button from '../button/button';
+import Spacer from '../spacer/spacer';
 
 const Container = styled.View`
   background: ${blue['300']};
@@ -42,11 +43,6 @@ const SvgContainer = styled.View`
   align-self: center;
   margin-bottom: 32px;
 `;
-
-const Spacer = styled.View`
-  flex: 1;
-`;
-
 function HomeCover({
   children,
   text,

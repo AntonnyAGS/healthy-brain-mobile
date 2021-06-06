@@ -8,7 +8,7 @@ import { registerRootComponent } from 'expo';
 import { loadAsync } from 'expo-font';
 
 import AppLoading from 'expo-app-loading';
-import { Login, Home, HomeSelector } from './factories/pages';
+import { Login, Home, HomeSelector, CreateAccount } from './factories/pages';
 
 const Stack = createStackNavigator();
 
@@ -57,6 +57,11 @@ function App() {
           <Stack.Screen
             name="Login"
             component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="CreateAccount"
+            component={CreateAccount}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

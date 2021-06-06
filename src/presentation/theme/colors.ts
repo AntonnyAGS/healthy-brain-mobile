@@ -11,4 +11,5 @@ export const blue: Readonly<Record<string, string>> = {
 
 export const grey: Readonly<Record<string, string>> = {
   '200': '#EEEFF4',
+  '300': '#CCCFF4',
 };
