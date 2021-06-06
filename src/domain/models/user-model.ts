@@ -4,4 +4,6 @@ export interface UserModel {
   email: string;
   userType: string;
   birthdayDate: Date;
+  healthArea?: string;
+  description?: string;
 }

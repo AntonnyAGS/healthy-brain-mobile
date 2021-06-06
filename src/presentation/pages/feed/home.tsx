@@ -7,10 +7,12 @@ import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Feather';
 
 import { FlatList, View } from 'react-native';
+import { useNavigation as useStackNavigation } from '@react-navigation/native';
 import { font } from '../../theme/text';
 import { blue } from '../../theme/colors';
 import { Doctor } from '../../usecases/doctor';
 import DoctorCard from '../../components/doctor-card/doctor-card';
+import { GetDoctors } from '../../../domain/usecases/get-doctors';
 
 const Container = styled.View`
   padding: 24px;
@@ -27,35 +29,31 @@ interface FeedProps {
   useNavigation: () => {
     toggleDrawer: () => void;
   };
+  doctors: GetDoctors.Model[];
 }
 
-const DATA: Doctor[] = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    name: 'Dr. Marcos',
-    category: 'Neuro',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    name: 'Dra. Camila',
-    category: 'Neuro',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    name: 'Dr. Sérgio',
-    category: 'Neuro',
-  },
-];
-
-export default function FeedHome({ useNavigation }: FeedProps): JSX.Element {
+export default function FeedHome({
+  useNavigation,
+  doctors,
+}: FeedProps): JSX.Element {
   const navigation = useNavigation();
+
+  const stackNavigation = useStackNavigation();
 
   const handleOpenDrawer = () => {
     navigation.toggleDrawer();
   };
 
-  const renderItem = ({ item }: { item: Doctor }) => (
-    <DoctorCard doctor={item} containerStyle={{ marginTop: 16 }} />
+  const handleNavigateToDoctorPage = (doctor: Doctor) => {
+    stackNavigation.navigate('Doctor', { doctor });
+  };
+
+  const renderItem = ({ item }: { item: GetDoctors.Model }) => (
+    <DoctorCard
+      onPress={handleNavigateToDoctorPage}
+      doctor={item}
+      containerStyle={{ marginTop: 16 }}
+    />
   );
 
   return (
@@ -64,9 +62,10 @@ export default function FeedHome({ useNavigation }: FeedProps): JSX.Element {
         <Icon name="menu" size={26} onPress={handleOpenDrawer} />
         <Title>Procure um médico para sua consulta online...</Title>
         <FlatList
-          data={DATA}
+          data={doctors}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          // eslint-disable-next-line no-underscore-dangle
+          keyExtractor={item => item._id}
         />
       </Container>
     </SafeAreaView>

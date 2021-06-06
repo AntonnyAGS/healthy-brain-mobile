@@ -1,5 +1,6 @@
 export interface Doctor {
-  id: string;
+  _id: string;
   name: string;
-  category: string;
+  healthArea?: string;
+  description?: string;
 }
