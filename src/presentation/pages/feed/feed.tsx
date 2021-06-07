@@ -6,6 +6,7 @@ import DoctorScreen from './doctor';
 
 import { GetDoctors } from '../../../domain/usecases/get-doctors';
 import { CreateConsult } from '../../../domain/usecases/create-consult';
+import { GetConsults } from '../../../domain/usecases/get-consults';
 
 const Stack = createStackNavigator();
 export default function Feed({

@@ -1,4 +1,4 @@
-export interface ConsultModel {
+export interface Consult {
   _id: string;
   consultDateTime: Date;
   endDateTime: Date;

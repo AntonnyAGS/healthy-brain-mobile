@@ -1,7 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/core';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ImageBackground, Platform, SafeAreaView, View } from 'react-native';
-import { Text } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/Feather';
 
 import styled from 'styled-components/native';
@@ -14,8 +13,6 @@ import { blue, grey } from '../../theme/colors';
 import { font } from '../../theme/text';
 import { Doctor } from '../../usecases/doctor';
 import { CreateConsult } from '../../../domain/usecases/create-consult';
-import Dialog from '../../components/dialog/dialog';
-import BottomCard from '../../components/bottom-card/bottom-card';
 
 const Container = styled.View`
   flex: 1;
@@ -67,7 +64,7 @@ const Header = styled.View`
 
 const ConsultTitle = styled.Text`
   font-size: 18px;
-  font-family: ${font.medium};
+  font-family: ${font.bold};
 `;
 
 const SelectDate = styled.Pressable`
@@ -300,6 +297,10 @@ export default function DoctorScreen({
         // eslint-disable-next-line no-underscore-dangle
         healthProfessionalId: doctor._id,
       });
+
+      setShowDialog(false);
+
+      navigation.navigate('Consultas');
     } catch (err) {
       console.error(err);
     } finally {
@@ -349,7 +350,7 @@ export default function DoctorScreen({
             <SelectDate onPress={handleOpenDatePicker}>
               <SelectDateText>
                 {currentDate
-                  ? dayjs(currentDate).format('DD/MM/YYYY')
+                  ? dayjs(currentDate).format('DD / MM / YYYY')
                   : 'Selecione o dia'}
               </SelectDateText>
             </SelectDate>
