@@ -3,4 +3,4 @@ import { CreateConsult } from '../../../../domain/usecases/create-consult';
 import { RemoteCreateConsult } from '../../../../data/usecases/remote-create-consult';
 
 export const makeRemoteCreateConsult = (): CreateConsult =>
-  new RemoteCreateConsult(makeApiUrl('/consultation'), makeAxiosHttpClient());
+  new RemoteCreateConsult(makeApiUrl('/consultations'), makeAxiosHttpClient());

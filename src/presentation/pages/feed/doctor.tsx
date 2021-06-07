@@ -5,7 +5,7 @@ import { Text } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/Feather';
 
 import styled from 'styled-components/native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { Event } from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
 
 import { Button, Spacer } from '../../components';
@@ -14,6 +14,8 @@ import { blue, grey } from '../../theme/colors';
 import { font } from '../../theme/text';
 import { Doctor } from '../../usecases/doctor';
 import { CreateConsult } from '../../../domain/usecases/create-consult';
+import Dialog from '../../components/dialog/dialog';
+import BottomCard from '../../components/bottom-card/bottom-card';
 
 const Container = styled.View`
   flex: 1;
@@ -24,7 +26,7 @@ const Container = styled.View`
   margin-top: -40px;
   background-color: white;
 
-  padding: 24px;
+  padding: 16px;
 `;
 
 const Title = styled.Text`
@@ -69,7 +71,7 @@ const ConsultTitle = styled.Text`
 `;
 
 const SelectDate = styled.Pressable`
-  padding: 8px 24px;
+  padding: 16px;
 
   background-color: ${grey['300']};
 
@@ -84,7 +86,10 @@ const SelectDateText = styled.Text`
 `;
 
 const SelectTime = styled.Pressable`
-  padding: 8px 24px;
+  padding: 16px;
+
+  justify-content: center;
+  align-items: center;
 
   background-color: ${grey['300']};
 
@@ -106,6 +111,54 @@ const TimeContainer = styled.View`
   width: 100%;
 `;
 
+type DatePickerProps = {
+  visible: boolean;
+  value: Date;
+  maximumDate?: Date;
+  minimumDate?: Date;
+  mode?: 'time' | 'datetime';
+  onChange: (event: Event, date?: Date) => void;
+  onRequestClose: () => void;
+};
+
+const DatePicker: React.FC<DatePickerProps> = ({
+  visible,
+  value,
+  maximumDate,
+  minimumDate,
+  onChange,
+  mode,
+  onRequestClose,
+}) => {
+  if (!visible) {
+    return null;
+  }
+
+  return Platform.OS === 'ios' ? (
+    <BottomDialog visible={visible} transparent onRequestClose={onRequestClose}>
+      <DateTimePicker
+        value={value}
+        display="spinner"
+        mode={mode}
+        maximumDate={maximumDate}
+        minimumDate={minimumDate}
+        testID="dateTimePicker"
+        onChange={onChange}
+      />
+    </BottomDialog>
+  ) : (
+    <DateTimePicker
+      display="spinner"
+      value={value}
+      mode={mode}
+      maximumDate={maximumDate}
+      minimumDate={minimumDate}
+      testID="dateTimePicker"
+      onChange={onChange}
+    />
+  );
+};
+
 export default function DoctorScreen({
   createConsult,
 }: DoctorProps): JSX.Element {
@@ -117,40 +170,92 @@ export default function DoctorScreen({
   const [showDialog, setShowDialog] = useState(false);
 
   const [showPicker, setShowPicker] = useState(false);
-  const [date, setDate] = useState<null | Date>(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const [showBeginPicker, setShowBeginPicker] = useState(false);
-  const [begin, setBegin] = useState<null | Date>(null);
+  const [begin, setBegin] = useState<Date>(
+    dayjs().set('hour', 8).set('minute', 0).toDate(),
+  );
 
   const [showEndPicker, setShowEndPicker] = useState(false);
-  const [end, setEnd] = useState<null | Date>(null);
+  const [end, setEnd] = useState<Date>(
+    dayjs().set('hour', 9).set('minute', 0).toDate(),
+  );
 
   const handleBack = () => {
     navigation.goBack();
   };
 
+  const handleOpenDatePicker = () => {
+    if (Platform.OS === 'ios') {
+      setShowDialog(false);
+    }
+    setShowPicker(true);
+  };
+
+  const handleOpenBeginPicker = () => {
+    if (Platform.OS === 'ios') {
+      setShowDialog(false);
+    }
+    setShowBeginPicker(true);
+  };
+
+  const handleOpenEndPicker = () => {
+    if (Platform.OS === 'ios') {
+      setShowDialog(false);
+    }
+    setShowEndPicker(true);
+  };
+
   const onChange = (_: unknown, selectedDate: Date | undefined) => {
-    const currentDate = selectedDate || date;
+    if (!selectedDate) {
+      return;
+    }
     setShowPicker(Platform.OS === 'ios');
-    setDate(currentDate);
+    setCurrentDate(selectedDate);
+  };
+
+  const requestDateClose = () => {
+    if (Platform.OS === 'ios') {
+      setShowDialog(true);
+    }
+    setShowPicker(false);
+  };
+
+  const requestBeginClose = () => {
+    if (Platform.OS === 'ios') {
+      setShowDialog(true);
+    }
+    setShowBeginPicker(false);
+  };
+
+  const requestEndClose = () => {
+    if (Platform.OS === 'ios') {
+      setShowDialog(true);
+    }
+    setShowEndPicker(false);
   };
 
   const onChangeBegin = (_: unknown, selectedDate: Date | undefined) => {
-    const currentDate = selectedDate || date;
+    if (!selectedDate) {
+      return;
+    }
     setShowBeginPicker(Platform.OS === 'ios');
-    setBegin(currentDate);
+    setBegin(selectedDate);
   };
 
   const onChangeEnd = (_: unknown, selectedDate: Date | undefined) => {
-    const currentDate = selectedDate || date;
+    if (!selectedDate) {
+      return;
+    }
     setShowEndPicker(Platform.OS === 'ios');
-    setEnd(currentDate);
+    setEnd(selectedDate);
   };
 
   const onCloseModal = () => {
-    setDate(null);
-    setBegin(null);
-    setEnd(null);
+    setCurrentDate(new Date());
+    setBegin(dayjs().set('hour', 8).set('minute', 0).toDate());
+    setEnd(dayjs().set('hour', 9).set('minute', 0).toDate());
     setShowDialog(false);
   };
 
@@ -167,7 +272,7 @@ export default function DoctorScreen({
   const [loading, setLoading] = useState(false);
 
   const handleCreateConsult = async () => {
-    if (!begin || !end || !date) {
+    if (!begin || !end || !currentDate) {
       return;
     }
 
@@ -176,7 +281,7 @@ export default function DoctorScreen({
       const beginHours = dayjs(begin).get('hours');
       const beginMinutes = dayjs(begin).get('minutes');
 
-      const beginDate = dayjs(date)
+      const beginDate = dayjs(currentDate)
         .set('hours', beginHours)
         .set('minutes', beginMinutes)
         .toDate();
@@ -184,7 +289,7 @@ export default function DoctorScreen({
       const endHours = dayjs(end).get('hours');
       const endMinutes = dayjs(end).get('minutes');
 
-      const endDate = dayjs(date)
+      const endDate = dayjs(currentDate)
         .set('hours', endHours)
         .set('minutes', endMinutes)
         .toDate();
@@ -241,46 +346,56 @@ export default function DoctorScreen({
         >
           <>
             <ConsultTitle>Marcar consulta</ConsultTitle>
-            <SelectDate onPress={() => setShowPicker(true)}>
+            <SelectDate onPress={handleOpenDatePicker}>
               <SelectDateText>
-                {date ? dayjs(date).format('DD/MM/YYYY') : 'Selecione o dia'}
+                {currentDate
+                  ? dayjs(currentDate).format('DD/MM/YYYY')
+                  : 'Selecione o dia'}
               </SelectDateText>
             </SelectDate>
             <TimeContainer>
               <SelectTime
                 style={{ marginRight: 16 }}
-                onPress={() => setShowBeginPicker(true)}
+                onPress={handleOpenBeginPicker}
               >
                 <SelectTimeText>
-                  {begin ? dayjs(begin).format('HH:mm') : 'Selecione o inicio'}
+                  {begin ? dayjs(begin).format('HH:mm') : 'Inicio'}
                 </SelectTimeText>
               </SelectTime>
-              <SelectTime onPress={() => setShowEndPicker(true)}>
-                <SelectTimeText>
-                  {end ? dayjs(end).format('HH:mm') : 'Selecione o fim'}
-                </SelectTimeText>
+              <SelectTime onPress={handleOpenEndPicker}>
+                <SelectTimeText>{dayjs(end).format('HH:mm')}</SelectTimeText>
               </SelectTime>
             </TimeContainer>
             <Button
-              onPress={() => console.log('oi')}
+              onPress={handleCreateConsult}
               style={{ marginTop: 16 }}
-              disabled={!date || !isValidTime}
+              disabled={!currentDate || !isValidTime || loading}
             >
               <ButtonTitle>Solicitar</ButtonTitle>
             </Button>
           </>
         </BottomDialog>
-        {showPicker && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            mode="date"
-            is24Hour
-            display="default"
-            onChange={onChange}
-          />
-        )}
-        {showBeginPicker && (
+        <DatePicker
+          visible={showPicker}
+          value={currentDate || new Date()}
+          onChange={onChange}
+          onRequestClose={requestDateClose}
+        />
+        <DatePicker
+          visible={showBeginPicker}
+          value={begin || new Date()}
+          mode="time"
+          onChange={onChangeBegin}
+          onRequestClose={requestBeginClose}
+        />
+        <DatePicker
+          visible={showEndPicker}
+          value={end || new Date()}
+          mode="time"
+          onChange={onChangeEnd}
+          onRequestClose={requestEndClose}
+        />
+        {/* {showBeginPicker && (
           <DateTimePicker
             testID="dateTimePicker"
             value={
@@ -311,7 +426,7 @@ export default function DoctorScreen({
             display="default"
             onChange={onChangeEnd}
           />
-        )}
+        )} */}
       </SafeAreaView>
     </>
   );

@@ -14,7 +14,7 @@ export class RemoteCreateConsult implements CreateConsult {
   ) {}
 
   async create(params: CreateConsult.Params): Promise<CreateConsult.Model> {
-    const token = AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem('token');
 
     const httpResponse = await this.httpClient.request({
       url: this.url,
