@@ -48,7 +48,7 @@ function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="Main">
           <Stack.Screen
             name="Home"
             component={Home}

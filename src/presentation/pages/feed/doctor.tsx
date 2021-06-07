@@ -1,10 +1,12 @@
 import { useNavigation, useRoute } from '@react-navigation/core';
-import React, { useState } from 'react';
-import { ImageBackground, SafeAreaView, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ImageBackground, Platform, SafeAreaView, View } from 'react-native';
 import { Text } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/Feather';
 
 import styled from 'styled-components/native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import dayjs from 'dayjs';
 import { Button, Spacer } from '../../components';
 import BottomDialog from '../../components/bottom-dialog/bottom-dialog';
 import { blue, grey } from '../../theme/colors';
@@ -64,6 +66,44 @@ const ConsultTitle = styled.Text`
   font-family: ${font.medium};
 `;
 
+const SelectDate = styled.Pressable`
+  padding: 8px 24px;
+
+  background-color: ${grey['300']};
+
+  border-radius: 5px;
+
+  margin-top: 16px;
+`;
+
+const SelectDateText = styled.Text`
+  font-family: ${font.medium};
+  font-size: 16px;
+`;
+
+const SelectTime = styled.Pressable`
+  padding: 8px 24px;
+
+  background-color: ${grey['300']};
+
+  border-radius: 5px;
+
+  margin-top: 16px;
+
+  flex: 1;
+`;
+
+const SelectTimeText = styled.Text`
+  font-family: ${font.medium};
+  font-size: 16px;
+`;
+
+const TimeContainer = styled.View`
+  flex-direction: row;
+
+  width: 100%;
+`;
+
 export default function DoctorScreen(): JSX.Element {
   const navigation = useNavigation();
   const { params } = useRoute();
@@ -72,9 +112,53 @@ export default function DoctorScreen(): JSX.Element {
 
   const [showDialog, setShowDialog] = useState(false);
 
+  const [showPicker, setShowPicker] = useState(false);
+  const [date, setDate] = useState<null | Date>(null);
+
+  const [showBeginPicker, setShowBeginPicker] = useState(false);
+  const [begin, setBegin] = useState<null | Date>(null);
+
+  const [showEndPicker, setShowEndPicker] = useState(false);
+  const [end, setEnd] = useState<null | Date>(null);
+
   const handleBack = () => {
     navigation.goBack();
   };
+
+  const onChange = (_: unknown, selectedDate: Date | undefined) => {
+    const currentDate = selectedDate || date;
+    setShowPicker(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
+
+  const onChangeBegin = (_: unknown, selectedDate: Date | undefined) => {
+    const currentDate = selectedDate || date;
+    setShowBeginPicker(Platform.OS === 'ios');
+    setBegin(currentDate);
+  };
+
+  const onChangeEnd = (_: unknown, selectedDate: Date | undefined) => {
+    const currentDate = selectedDate || date;
+    setShowEndPicker(Platform.OS === 'ios');
+    setEnd(currentDate);
+  };
+
+  const onCloseModal = () => {
+    setDate(null);
+    setBegin(null);
+    setEnd(null);
+    setShowDialog(false);
+  };
+
+  const isValidTime = useMemo(() => {
+    if (!end || !begin) {
+      return false;
+    }
+
+    const isAfter = dayjs(end).isAfter(begin);
+
+    return isAfter;
+  }, [begin, end]);
 
   return (
     <>
@@ -107,23 +191,86 @@ export default function DoctorScreen(): JSX.Element {
           </Button>
           <Spacer />
         </Container>
-        {/* <Container>
-        <Icon name="arrow-left" size={26} onPress={handleBack} />
-        <Spacer />
-        <Title>{doctor.name}</Title>
-        <Button onPress={() => null}>
-          <ButtonTitle>Cadastrar</ButtonTitle>
-        </Button>
-        <Spacer />
-      </Container> */}
         <BottomDialog
           transparent
           visible={showDialog}
           animationType="fade"
-          onRequestClose={() => setShowDialog(false)}
+          onRequestClose={onCloseModal}
         >
-          <ConsultTitle>Marcar consulta</ConsultTitle>
+          <>
+            <ConsultTitle>Marcar consulta</ConsultTitle>
+            <SelectDate onPress={() => setShowPicker(true)}>
+              <SelectDateText>
+                {date ? dayjs(date).format('DD/MM/YYYY') : 'Selecione o dia'}
+              </SelectDateText>
+            </SelectDate>
+            <TimeContainer>
+              <SelectTime
+                style={{ marginRight: 16 }}
+                onPress={() => setShowBeginPicker(true)}
+              >
+                <SelectTimeText>
+                  {begin ? dayjs(begin).format('HH:mm') : 'Selecione o inicio'}
+                </SelectTimeText>
+              </SelectTime>
+              <SelectTime onPress={() => setShowEndPicker(true)}>
+                <SelectTimeText>
+                  {end ? dayjs(end).format('HH:mm') : 'Selecione o fim'}
+                </SelectTimeText>
+              </SelectTime>
+            </TimeContainer>
+            <Button
+              onPress={() => console.log('oi')}
+              style={{ marginTop: 16 }}
+              disabled={!date || !isValidTime}
+            >
+              <ButtonTitle>Solicitar</ButtonTitle>
+            </Button>
+          </>
         </BottomDialog>
+        {showPicker && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date || new Date()}
+            mode="date"
+            is24Hour
+            display="default"
+            onChange={onChange}
+          />
+        )}
+        {showBeginPicker && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={
+              begin ||
+              dayjs(date || new Date())
+                .set('hour', 8)
+                .set('minutes', 0)
+                .toDate()
+            }
+            mode="time"
+            is24Hour
+            display="default"
+            onChange={onChangeBegin}
+          />
+        )}
+        {showEndPicker && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={
+              end ||
+              dayjs(date || new Date())
+                .set('hour', 9)
+                .set('minutes', 0)
+                .toDate()
+            }
+            mode="time"
+            is24Hour
+            display="default"
+            minimumDate={begin || undefined}
+            onChange={onChangeEnd}
+          />
+        )}
       </SafeAreaView>
     </>
   );
