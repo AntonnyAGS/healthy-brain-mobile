@@ -20,11 +20,20 @@ function Button({
   children,
   color,
   style,
+  disabled,
 }: CustomProps): JSX.Element {
   return (
     <PressableButton
+      disabled={disabled}
       style={({ pressed }) => [
-        { backgroundColor: pressed ? pressedColor : color },
+        {
+          // eslint-disable-next-line no-nested-ternary
+          backgroundColor: disabled
+            ? '#DEDEDE'
+            : pressed
+            ? pressedColor
+            : color,
+        },
         { ...(style as Record<string, unknown>) },
       ]}
       onPress={onPress}

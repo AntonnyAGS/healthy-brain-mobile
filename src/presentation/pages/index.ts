@@ -4,3 +4,4 @@ export { default as HomeSelector } from './home-selector/home-selector';
 export { default as CreateAccount } from './create-account/create-account';
 export { default as Main } from './main/main';
 export { default as Feed } from './feed/feed';
+export { default as Consults } from './consults/consults';

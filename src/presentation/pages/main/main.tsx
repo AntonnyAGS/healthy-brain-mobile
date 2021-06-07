@@ -6,7 +6,7 @@ import { font } from '../../theme/text';
 
 const Drawer = createDrawerNavigator();
 
-export default function Main({ Feed }: MainProps): JSX.Element {
+export default function Main({ Feed, Consults }: MainProps): JSX.Element {
   return (
     <Drawer.Navigator
       initialRouteName="Feed"
@@ -15,10 +15,12 @@ export default function Main({ Feed }: MainProps): JSX.Element {
       }}
     >
       <Drawer.Screen name="Feed" component={Feed} />
+      <Drawer.Screen name="Consultas" component={Consults} />
     </Drawer.Navigator>
   );
 }
 
 interface MainProps {
   Feed: React.ComponentType<unknown>;
+  Consults: React.ComponentType<unknown>;
 }

@@ -5,11 +5,13 @@ import Home from './home';
 import DoctorScreen from './doctor';
 
 import { GetDoctors } from '../../../domain/usecases/get-doctors';
+import { CreateConsult } from '../../../domain/usecases/create-consult';
 
 const Stack = createStackNavigator();
 export default function Feed({
   useNavigation,
   loadDoctors,
+  createConsult,
 }: FeedProps): JSX.Element {
   const [doctors, setDoctors] = useState<GetDoctors.Model[]>([]);
 
@@ -33,11 +35,9 @@ export default function Feed({
           <Home doctors={doctors} {...props} useNavigation={useNavigation} />
         )}
       </Stack.Screen>
-      <Stack.Screen
-        name="Doctor"
-        options={{ headerShown: false }}
-        component={DoctorScreen}
-      />
+      <Stack.Screen name="Doctor" options={{ headerShown: false }}>
+        {props => <DoctorScreen {...props} createConsult={createConsult} />}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }
@@ -46,4 +46,5 @@ interface FeedProps {
     toggleDrawer: () => void;
   };
   loadDoctors: GetDoctors;
+  createConsult: CreateConsult;
 }
