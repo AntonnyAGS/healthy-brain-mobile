@@ -6,10 +6,9 @@ import styled from 'styled-components/native';
 
 import Icon from 'react-native-vector-icons/Feather';
 
-import { FlatList, View } from 'react-native';
+import { FlatList } from 'react-native';
 import { useNavigation as useStackNavigation } from '@react-navigation/native';
 import { font } from '../../theme/text';
-import { blue } from '../../theme/colors';
 import { Doctor } from '../../usecases/doctor';
 import DoctorCard from '../../components/doctor-card/doctor-card';
 import { GetDoctors } from '../../../domain/usecases/get-doctors';

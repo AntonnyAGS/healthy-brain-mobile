@@ -57,7 +57,7 @@ export default function Consults({
   }) => (
     <ConsultCard
       consult={item}
-      name={`#${index} - Minha Consulta`}
+      name={`#${index + 1} - Minha Consulta`}
       containerStyle={{ marginTop: 16 }}
     />
   );
