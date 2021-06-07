@@ -7,11 +7,13 @@ import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
+
 import { Button, Spacer } from '../../components';
 import BottomDialog from '../../components/bottom-dialog/bottom-dialog';
 import { blue, grey } from '../../theme/colors';
 import { font } from '../../theme/text';
 import { Doctor } from '../../usecases/doctor';
+import { CreateConsult } from '../../../domain/usecases/create-consult';
 
 const Container = styled.View`
   flex: 1;
@@ -104,11 +106,13 @@ const TimeContainer = styled.View`
   width: 100%;
 `;
 
-export default function DoctorScreen(): JSX.Element {
+export default function DoctorScreen({
+  createConsult,
+}: DoctorProps): JSX.Element {
   const navigation = useNavigation();
   const { params } = useRoute();
 
-  const { doctor } = params as DoctorProps;
+  const { doctor } = params as DoctorParams;
 
   const [showDialog, setShowDialog] = useState(false);
 
@@ -159,6 +163,44 @@ export default function DoctorScreen(): JSX.Element {
 
     return isAfter;
   }, [begin, end]);
+
+  const [loading, setLoading] = useState(false);
+
+  const handleCreateConsult = async () => {
+    if (!begin || !end || !date) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const beginHours = dayjs(begin).get('hours');
+      const beginMinutes = dayjs(begin).get('minutes');
+
+      const beginDate = dayjs(date)
+        .set('hours', beginHours)
+        .set('minutes', beginMinutes)
+        .toDate();
+
+      const endHours = dayjs(end).get('hours');
+      const endMinutes = dayjs(end).get('minutes');
+
+      const endDate = dayjs(date)
+        .set('hours', endHours)
+        .set('minutes', endMinutes)
+        .toDate();
+
+      await createConsult.create({
+        consultDateTime: beginDate,
+        endDateTime: endDate,
+        // eslint-disable-next-line no-underscore-dangle
+        healthProfessionalId: doctor._id,
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -231,7 +273,7 @@ export default function DoctorScreen(): JSX.Element {
         {showPicker && (
           <DateTimePicker
             testID="dateTimePicker"
-            value={date || new Date()}
+            value={date}
             mode="date"
             is24Hour
             display="default"
@@ -267,7 +309,6 @@ export default function DoctorScreen(): JSX.Element {
             mode="time"
             is24Hour
             display="default"
-            minimumDate={begin || undefined}
             onChange={onChangeEnd}
           />
         )}
@@ -277,5 +318,9 @@ export default function DoctorScreen(): JSX.Element {
 }
 
 interface DoctorProps {
+  createConsult: CreateConsult;
+}
+
+interface DoctorParams {
   doctor: Doctor;
 }
