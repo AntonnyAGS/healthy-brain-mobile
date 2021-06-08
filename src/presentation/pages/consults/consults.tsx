@@ -31,7 +31,7 @@ export default function Consults({
 
   const [consults, setConsults] = useState<GetConsults.Model[]>([]);
 
-  const hnadleLoadConsults = async () => {
+  const handleLoadConsults = async () => {
     try {
       const result = await loadConsults.getAll();
       setConsults(result);
@@ -41,7 +41,7 @@ export default function Consults({
   };
 
   useEffect(() => {
-    hnadleLoadConsults();
+    handleLoadConsults();
   });
 
   const handleOpenDrawer = () => {
