@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import styled from 'styled-components/native';
@@ -31,18 +31,20 @@ export default function Consults({
 
   const [consults, setConsults] = useState<GetConsults.Model[]>([]);
 
-  const handleLoadConsults = async () => {
+  const [refetch, setRefetch] = useState(false);
+
+  const handleLoadConsults = useCallback(async () => {
     try {
       const result = await loadConsults.getAll();
       setConsults(result);
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [loadConsults]);
 
   useEffect(() => {
     handleLoadConsults();
-  });
+  }, [handleLoadConsults, refetch]);
 
   const handleOpenDrawer = () => {
     navigation.toggleDrawer();

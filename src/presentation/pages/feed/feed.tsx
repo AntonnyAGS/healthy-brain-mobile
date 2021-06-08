@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import Home from './home';
 import DoctorScreen from './doctor';
@@ -15,18 +15,20 @@ export default function Feed({
 }: FeedProps): JSX.Element {
   const [doctors, setDoctors] = useState<GetDoctors.Model[]>([]);
 
-  const handleLoadDoctor = async () => {
+  const [refetch, setRefetch] = useState(false);
+
+  const handleLoadDoctor = useCallback(async () => {
     try {
       const result = await loadDoctors.getAll();
       setDoctors(result);
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [loadDoctors]);
 
   useEffect(() => {
     handleLoadDoctor();
-  });
+  }, [handleLoadDoctor, refetch]);
 
   return (
     <Stack.Navigator initialRouteName="Main">
